@@ -28,7 +28,7 @@ const produtoSchema = new mongoose.Schema({
     type: String,
     trim: true
   }
-}, { timestamps: true });
+}, { timestamps: true }); 
 
 const Produto = mongoose.model('Produto', produtoSchema);
 

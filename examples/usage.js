@@ -8,16 +8,13 @@ const {
 } = require("../src/lib/produtoService");
 const mongoose = require("mongoose");
 
-// --- Função Principal Assíncrona para Executar Exemplos ---
 const runExamples = async () => {
   console.log("Iniciando exemplos de uso da biblioteca ecommerce-lib...");
 
-  // 1. Conectar ao Banco de Dados
   await connectDB();
 
   let produtoInseridoId = null;
 
-  // --- Exemplo de Inserção ---
   console.log("\n--- Exemplo: Inserindo um Produto Válido ---");
   try {
     const novoProduto = {
@@ -28,17 +25,15 @@ const runExamples = async () => {
       categoria: "Eletrônicos",
     };
     const produtoSalvo = await inserirProduto(novoProduto);
-    produtoInseridoId = produtoSalvo._id; // Guarda o ID para usar depois
+    produtoInseridoId = produtoSalvo._id; 
     console.log("Produto inserido:", produtoSalvo);
   } catch (error) {
-    // O erro já é logado dentro da função inserirProduto
     console.error("Falha ao inserir produto válido:", error.message);
   }
 
   console.log("\n--- Exemplo: Tentando Inserir Produto Inválido (sem nome) ---");
   try {
     const produtoInvalido = {
-      // nome: "Produto Sem Nome", // Campo obrigatório faltando
       descricao: "Este produto não tem nome",
       preco: 10.0,
       quantidade_em_estoque: 5,
@@ -61,7 +56,6 @@ const runExamples = async () => {
     console.log("Erro esperado ao inserir produto com preço inválido:", error.message);
   }
 
-  // --- Exemplo de Busca ---
   console.log("\n--- Exemplo: Buscando Todos os Produtos ---");
   try {
     const todosProdutos = await buscarProdutos();
@@ -72,7 +66,6 @@ const runExamples = async () => {
 
   console.log("\n--- Exemplo: Buscando Produtos por Nome (Regex) ---");
   try {
-    // Busca produtos cujo nome contenha "Notebook" (case-insensitive)
     const produtosNotebook = await buscarProdutos({ nome: /Notebook/i });
     console.log("Notebooks encontrados:", produtosNotebook);
   } catch (error) {
@@ -104,14 +97,12 @@ const runExamples = async () => {
     console.error("Falha ao buscar produto por ID inválido:", error.message);
   }
 
-  // --- Exemplo de Deleção ---
   if (produtoInseridoId) {
     console.log(`\n--- Exemplo: Deletando Produto por ID (${produtoInseridoId}) ---`);
     try {
       const resultadoDelecao = await deletarProduto(produtoInseridoId);
       if (resultadoDelecao) {
         console.log("Resultado da deleção:", resultadoDelecao);
-        // Tenta buscar novamente para confirmar a deleção
         const produtoAposDelecao = await buscarProdutoPorId(produtoInseridoId);
         if (!produtoAposDelecao) {
           console.log("Confirmação: Produto deletado com sucesso.");
@@ -135,7 +126,6 @@ const runExamples = async () => {
      console.error("Falha ao tentar deletar produto com ID inválido:", error.message);
   }
 
-  // --- Finalização ---
   console.log("\nExemplos concluídos.");
 
   try {
