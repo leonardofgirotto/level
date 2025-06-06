@@ -54,7 +54,6 @@ const pedidoSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-// Calcular valor total antes de salvar
 pedidoSchema.pre('validate', function(next) {
   if (this.itens && Array.isArray(this.itens)) {
     this.valor_total = this.itens.reduce((total, item) => {

@@ -4,24 +4,16 @@ const Usuario = require('../models/Usuario');
 const logger = require('../utils/logger');
 const mongoose = require('mongoose');
 
-/**
- * Cria um novo pedido
- * @param {object} dadosPedido 
- * @returns {Promise<object>}
- * @throws {Error}
- */
 const criarPedido = async (dadosPedido) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
-    // Verificar se o usuário existe
     const usuario = await Usuario.findById(dadosPedido.usuario).session(session);
     if (!usuario) {
       throw new Error(`Usuário com ID ${dadosPedido.usuario} não encontrado.`);
     }
 
-    // Verificar e processar os itens
     const itensProcessados = [];
     let valorTotal = 0;
 
@@ -35,7 +27,6 @@ const criarPedido = async (dadosPedido) => {
         throw new Error(`Estoque insuficiente para o produto ${produto.nome}.`);
       }
 
-      // Atualizar o estoque
       await Produto.findByIdAndUpdate(
         produto._id,
         { $inc: { quantidade_em_estoque: -item.quantidade } },
@@ -52,7 +43,6 @@ const criarPedido = async (dadosPedido) => {
       valorTotal += produto.preco * item.quantidade;
     }
 
-    // Criar o pedido com os itens processados
     const novoPedido = new Pedido({
       usuario: dadosPedido.usuario,
       itens: itensProcessados,
@@ -81,12 +71,6 @@ const criarPedido = async (dadosPedido) => {
   }
 };
 
-/**
- * Busca pedidos com base em filtros
- * @param {object} filtro 
- * @returns {Promise<Array<object>>}
- * @throws {Error}
- */
 const buscarPedidos = async (filtro = {}) => {
   try {
     const pedidos = await Pedido.find(filtro)
@@ -102,12 +86,6 @@ const buscarPedidos = async (filtro = {}) => {
   }
 };
 
-/**
- * Busca um pedido pelo ID
- * @param {string} id 
- * @returns {Promise<object|null>}
- * @throws {Error}
- */
 const buscarPedidoPorId = async (id) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -133,13 +111,6 @@ const buscarPedidoPorId = async (id) => {
   }
 };
 
-/**
- * Atualiza o status de um pedido
- * @param {string} id 
- * @param {string} novoStatus 
- * @returns {Promise<object|null>}
- * @throws {Error}
- */
 const atualizarStatusPedido = async (id, novoStatus) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -172,12 +143,6 @@ const atualizarStatusPedido = async (id, novoStatus) => {
   }
 };
 
-/**
- * Cancela um pedido e devolve os produtos ao estoque
- * @param {string} id 
- * @returns {Promise<object|null>}
- * @throws {Error}
- */
 const cancelarPedido = async (id) => {
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -207,7 +172,6 @@ const cancelarPedido = async (id) => {
       throw new Error(`Não é possível cancelar um pedido com status ${pedido.status}.`);
     }
 
-    // Devolver produtos ao estoque
     for (const item of pedido.itens) {
       await Produto.findByIdAndUpdate(
         item.produto,
@@ -216,7 +180,6 @@ const cancelarPedido = async (id) => {
       );
     }
 
-    // Atualizar status para cancelado
     pedido.status = 'cancelado';
     await pedido.save({ session });
 

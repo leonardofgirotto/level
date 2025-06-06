@@ -2,12 +2,7 @@ const Usuario = require('../models/Usuario');
 const logger = require('../utils/logger');
 const mongoose = require('mongoose');
 
-/**
- * Cadastra um novo usuário no sistema
- * @param {object} dadosUsuario 
- * @returns {Promise<object>}
- * @throws {Error}
- */
+
 const cadastrarUsuario = async (dadosUsuario) => {
   try {
     const novoUsuario = new Usuario(dadosUsuario);
@@ -28,15 +23,9 @@ const cadastrarUsuario = async (dadosUsuario) => {
   }
 };
 
-/**
- * Busca usuários com base em filtros
- * @param {object} filtro 
- * @returns {Promise<Array<object>>}
- * @throws {Error}
- */
 const buscarUsuarios = async (filtro = {}) => {
   try {
-    const usuarios = await Usuario.find(filtro, { senha: 0 }); // Exclui a senha dos resultados
+    const usuarios = await Usuario.find(filtro, { senha: 0 });
     console.log(`${usuarios.length} usuário(s) encontrado(s).`);
     return usuarios;
   } catch (error) {
@@ -47,19 +36,13 @@ const buscarUsuarios = async (filtro = {}) => {
   }
 };
 
-/**
- * Busca um usuário pelo ID
- * @param {string} id 
- * @returns {Promise<object|null>}
- * @throws {Error}
- */
 const buscarUsuarioPorId = async (id) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       console.log(`ID inválido fornecido: ${id}`);
       return null;
     }
-    const usuario = await Usuario.findById(id, { senha: 0 }); // Exclui a senha do resultado
+    const usuario = await Usuario.findById(id, { senha: 0 });
     if (usuario) {
       console.log(`Usuário encontrado: ${usuario.nome}`);
     } else {
@@ -74,13 +57,6 @@ const buscarUsuarioPorId = async (id) => {
   }
 };
 
-/**
- * Atualiza os dados de um usuário
- * @param {string} id 
- * @param {object} dadosAtualizacao 
- * @returns {Promise<object|null>}
- * @throws {Error}
- */
 const atualizarUsuario = async (id, dadosAtualizacao) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -110,19 +86,12 @@ const atualizarUsuario = async (id, dadosAtualizacao) => {
   }
 };
 
-/**
- * Remove um usuário do sistema (soft delete)
- * @param {string} id 
- * @returns {Promise<object|null>}
- * @throws {Error}
- */
 const removerUsuario = async (id) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       console.log(`ID inválido fornecido para remoção: ${id}`);
       return null;
     }
-    // Implementa soft delete alterando o status para inativo
     const usuarioInativado = await Usuario.findByIdAndUpdate(
       id,
       { ativo: false },

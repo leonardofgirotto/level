@@ -2,11 +2,6 @@
 const Produto = require("../models/Produto");
 const logger = require("../utils/logger");
 
-/**
- * @param {object} dadosProduto
- * @returns {Promise<object>}
- * @throws {Error}
- */
 const inserirProduto = async (dadosProduto) => {
   try {
     const novoProduto = new Produto(dadosProduto);
@@ -27,12 +22,6 @@ const inserirProduto = async (dadosProduto) => {
   }
 };
 
-/**
- *
- * @param {object} filtro
- * @returns {Promise<Array<object>>}
- * @throws {Error}
- */
 const buscarProdutos = async (filtro = {}) => {
   try {
     const produtos = await Produto.find(filtro);
@@ -46,11 +35,6 @@ const buscarProdutos = async (filtro = {}) => {
   }
 };
 
-/**
- * @param {string} id
- * @returns {Promise<object|null>}
- * @throws {Error}
- */
 const buscarProdutoPorId = async (id) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -72,11 +56,6 @@ const buscarProdutoPorId = async (id) => {
   }
 };
 
-/**
- * @param {string} id 
- * @returns {Promise<object|null>}
- * @throws {Error}
- */
 const deletarProduto = async (id) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -106,4 +85,3 @@ module.exports = {
   buscarProdutoPorId,
   deletarProduto,
 };
-

@@ -25,7 +25,6 @@ const runExamples = async () => {
   let produtoIds = [];
   let pedidoId = null;
 
-  // 1. Cadastrar um usuário
   console.log("\n--- Cadastrando um usuário ---");
   try {
     const dadosUsuario = {
@@ -49,7 +48,6 @@ const runExamples = async () => {
     console.error("Falha ao cadastrar usuário:", error.message);
   }
 
-  // 2. Cadastrar produtos para o pedido
   console.log("\n--- Cadastrando produtos ---");
   try {
     const produtos = [
@@ -78,7 +76,6 @@ const runExamples = async () => {
     console.error("Falha ao cadastrar produtos:", error.message);
   }
 
-  // 3. Criar um pedido
   console.log("\n--- Criando um pedido ---");
   if (usuarioId && produtoIds.length >= 2) {
     try {
@@ -104,7 +101,6 @@ const runExamples = async () => {
     }
   }
 
-  // 4. Buscar pedidos do usuário
   if (usuarioId) {
     console.log("\n--- Buscando pedidos do usuário ---");
     try {
@@ -115,7 +111,6 @@ const runExamples = async () => {
     }
   }
 
-  // 5. Atualizar status do pedido
   if (pedidoId) {
     console.log("\n--- Atualizando status do pedido ---");
     try {
@@ -126,14 +121,12 @@ const runExamples = async () => {
     }
   }
 
-  // 6. Cancelar pedido
   if (pedidoId) {
     console.log("\n--- Cancelando pedido ---");
     try {
       const pedidoCancelado = await cancelarPedido(pedidoId);
       console.log("Pedido cancelado:", pedidoCancelado);
       
-      // Verificar se os produtos voltaram ao estoque
       console.log("\n--- Verificando estoque após cancelamento ---");
       const produtos = await buscarProdutos({ _id: { $in: produtoIds } });
       console.log("Produtos após cancelamento:", produtos);
