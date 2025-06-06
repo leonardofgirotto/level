@@ -1,35 +1,32 @@
+
 const mongoose = require('mongoose');
+const logger = require('../utils/logger'); // Assumindo que o logger estará em utils
 
-const produtoSchema = new mongoose.Schema({
-  nome: {
-    type: String,
-    required: [true, 'O nome do produto é obrigatório.'],
-    trim: true
-  },
-  descricao: {
-    type: String,
-    trim: true
-  },
-  preco: {
-    type: Number,
-    required: [true, 'O preço do produto é obrigatório.'],
-    min: [0.01, 'O preço deve ser um valor positivo.']
-  },
-  quantidade_em_estoque: {
-    type: Number,
-    required: [true, 'A quantidade em estoque é obrigatória.'],
-    min: [0, 'A quantidade em estoque não pode ser negativa.'],
-    validate: {
-      validator: Number.isInteger,
-      message: 'A quantidade em estoque deve ser um número inteiro.'
-    }
-  },
-  categoria: {
-    type: String,
-    trim: true
+// Substitua pela sua string de conexão do MongoDB
+// Exemplo: 'mongodb://localhost:27017/ecommerce_db'
+// Para desenvolvimento local, você pode usar o MongoDB Community Server ou um serviço como MongoDB Atlas.
+// É importante NÃO colocar a string de conexão diretamente no código em produção.
+// Use variáveis de ambiente.
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/';
+
+const connectDB = async () => {
+  try {
+    await mongoose.connect(MONGO_URI, {
+      // Opções do Mongoose para evitar warnings de depreciação (podem variar com a versão)
+      // useNewUrlParser: true, // Não mais necessário a partir do Mongoose 6
+      // useUnifiedTopology: true, // Não mais necessário a partir do Mongoose 6
+      // useCreateIndex: true, // Não suportado
+      // useFindAndModify: false // Não suportado
+    });
+    console.log('MongoDB conectado com sucesso.');
+  } catch (err) {
+    const errorMessage = `Erro ao conectar ao MongoDB: ${err.message}`;
+    console.error(errorMessage);
+    logger.error(errorMessage); // Loga o erro
+    // Encerra o processo com falha se não conseguir conectar ao DB
+    process.exit(1);
   }
-}, { timestamps: true }); 
+};
 
-const Produto = mongoose.model('Produto', produtoSchema);
+module.exports = connectDB;
 
-module.exports = Produto;
