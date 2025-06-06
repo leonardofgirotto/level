@@ -1,18 +1,25 @@
 {
-  "name": "ecommerce-lib",
+  "name": "trabalhoback",
   "version": "1.0.0",
-  "main": "index.js",
-  "directories": {
-    "example": "examples"
-  },
+  "description": "Sistema de e-commerce backend",
+  "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "lint": "eslint ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
-    "mongoose": "^8.15.1"
-  }
+    "express": "^4.18.2",
+    "mongoose": "^7.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22",
+    "eslint": "^8.36.0"
+  },
+  "author": "Pedro",
+  "license": "ISC"
 }
